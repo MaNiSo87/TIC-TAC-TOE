@@ -1,6 +1,27 @@
 import sys
+from os import system
+import platform
+#auto-py-to-exe
+
+
+def clean():
+    """
+    Clears the console
+    """
+    os_name = platform.system().lower()
+    if 'windows' in os_name:
+        system('cls')
+    else:
+        system('clear')
+
 
 def show(game):
+    print(' 1 | 2 | 3 ', sep='', end='')
+    print('\n---+---+---')
+    print(' 4 | 5 | 6 ', sep='', end='')
+    print('\n---+---+---')
+    print(' 7 | 8 | 9 ', sep='', end='')
+    print('\n===========')
     x = ''
     y = ''
     for i in range(len(game)):
@@ -21,16 +42,15 @@ def show(game):
             print('|', sep='', end='')
 
 
-def end(game, who):
-    if who == 'X':
-        print('You won...')
-        sys.exit(0)
-    elif who == 'O':
-        print('I won...')
-        sys.exit(0)
-    elif len(game) == 9:
-        print('Draw...')
-        sys.exit(0)
+def what():
+    x = input('want to play again?(yes/no)')
+    if x == 'yes':
+        clean()
+        main('')
+    else:
+        print('see you! :)')
+        x = input('press any key!')
+    sys.exit(0)
 
 
 def check(game):
@@ -54,13 +74,13 @@ def check(game):
 def status(game, who):
     if who == -1:
         print('You won...')
-        sys.exit(0)
+        what()
     if who == 1:
         print('I won...')
-        sys.exit(0)
+        what()
     if who == 0 and len(game) == 9:
         print('Draw...')
-        sys.exit(0)
+        what()
 
 
 def minmax(game, maximizing):
@@ -68,22 +88,25 @@ def minmax(game, maximizing):
     if status == -1 or status == 1 or (len(game) == 9 and status == 0):
         return status
     
+    best_score = 0
+    possible_numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] 
     if maximizing:
-        best_score = 0
-        for i in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
-            if i not in game:
-                score = minmax(game + i, False)
-                best_score = max(best_score, score)
-        return best_score
+        for i in range(len(possible_numbers)):
+            if possible_numbers[i] not in game:
+                score = minmax(game + possible_numbers[i], False)
+                if i == 0:
+                    best_score = score
+                else:
+                 best_score = max(best_score, score)
     else:
-        best_score = 0
-        for i in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
-            if i not in game:
-                score = minmax(game + i, True)
-                best_score = min(best_score, score)
-        return best_score
-
-    
+        for i in range(len(possible_numbers)):
+            if possible_numbers[i] not in game:
+                score = minmax(game + possible_numbers[i], True)
+                if i == 0:
+                    best_score = score
+                else:
+                    best_score = min(best_score, score)
+    return best_score
 
 
 def bot_move(game):
@@ -97,12 +120,12 @@ def bot_move(game):
         score = minmax(game + i, False)
         if i == possible_moves[0]:
             best_move = i
-            best_score = score
-        elif best_score < score:
+            best_score = score 
+        elif best_score <= score:
             best_move = i
             best_score = score
+        print(f' {i}, score = {score}, best_score = {best_score}, best_move = {best_move}')
     return best_move
-
 
 
 def player_move(game):
@@ -117,18 +140,15 @@ def player_move(game):
 
 def main(game):
     while True:
+        show(game)
         player = player_move(game)
         game += player
         status(game, check(game))
         bot = bot_move(game)
         game += bot
-        print(f'My move: {bot}')
+        #print(f'My move: {bot}')
         status(game, check(game))
-        show(game)
-
-
-
-
+        #clean()
 
 
 main('')
