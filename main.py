@@ -124,7 +124,7 @@ def bot_move(game):
         elif best_score <= score:
             best_move = i
             best_score = score
-        print(f' {i}, score = {score}, best_score = {best_score}, best_move = {best_move}')
+        #print(f' {i}, score = {score}, best_score = {best_score}, best_move = {best_move}')
     return best_move
 
 
