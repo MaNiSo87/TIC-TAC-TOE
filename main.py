@@ -110,6 +110,8 @@ def minmax(game, maximizing):
 
 
 def bot_move(game):
+    if '5' not in game:
+        return '5'
     possible_moves = []
     for i in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
         if i not in game:
